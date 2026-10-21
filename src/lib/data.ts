@@ -317,7 +317,6 @@ export const AGENCY_SERVICES: AgencyService[] = [
 export const AGENCY_CONFIG = {
   name: 'رؤية العقارية',
   subtitle: 'الريادة والتميز في الوساطة والاستثمار العقاري',
-  falLicense: '1200028491',
   crNumber: '1010789423',
   phone: '+966 11 456 7890',
   mobile: '+966 50 123 4567',

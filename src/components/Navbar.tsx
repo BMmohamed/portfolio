@@ -37,7 +37,7 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5 font-medium text-amber-400">
               <ShieldCheck className="w-3.5 h-3.5" />
-              مرخص من الهيئة العامة للعقار (فال: {AGENCY_CONFIG.falLicense})
+              خدمات وساطة وتسويق عقاري احترافي
             </span>
             <span className="hidden md:inline text-slate-500">|</span>
             <span className="hidden md:inline">س.ت: {AGENCY_CONFIG.crNumber}</span>

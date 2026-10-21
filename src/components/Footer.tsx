@@ -18,12 +18,12 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
-              منشأة وساطة وتسويق عقاري مرخصة ومعتمدة من الهيئة العامة للعقار. نقدم حلولاً عقارية ذكية تضمن لك أفضل الصفقات وأعلى العوائد الاستثمارية.
+              منشأة وساطة وتسويق عقاري احترافية. نقدم حلولاً عقارية ذكية تضمن لك أفضل الصفقات وأعلى العوائد الاستثمارية.
             </p>
             <div className="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-1">
               <div className="flex items-center gap-2 text-xs text-amber-400 font-semibold">
                 <ShieldCheck className="w-4 h-4" />
-                <span>رخصة فال العقارية: {AGENCY_CONFIG.falLicense}</span>
+                <span>وساطة وتسويق عقاري معتمد</span>
               </div>
               <div className="text-xs text-slate-400">
                 السجل التجاري: {AGENCY_CONFIG.crNumber}
@@ -147,7 +147,7 @@ export default function Footer() {
 
         {/* Bottom copyright & admin link */}
         <div className="pt-8 mt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© 2026 {AGENCY_CONFIG.name}. جميع الحقوق محفوظة. متوافق مع أنظمة الهيئة العامة للعقار.</p>
+          <p>© 2026 {AGENCY_CONFIG.name}. جميع الحقوق محفوظة.</p>
           <div className="flex items-center gap-4">
             <Link href="/about" className="hover:text-slate-400 transition-colors">سياسة الخصوصية</Link>
             <span>•</span>

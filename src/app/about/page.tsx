@@ -57,7 +57,7 @@ export default function AboutPage() {
               انطلقت شركة {AGENCY_CONFIG.name} في قلب العاصمة الرياض بهدف إعادة صياغة تجربة الوساطة العقارية لتصبح أكثر موثوقية، سرعة، واحترافية. نحن فريق يجمع بين الخبرة الميدانية العميقة بأحياء المدن السعودية والتحليل الرقمي الدقيق لاتجاهات السوق العقاري.
             </p>
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-              نفخر بكوننا وسيطاً عقارياً مرخصاً ومعتمداً برخصة فال رقم ({AGENCY_CONFIG.falLicense})، ونعمل تحت مظلة تنظيمات الهيئة العامة للعقار لنضمن لكل عميل حقوقاً مصانة وصفقات موثقة بأعلى معايير الأمان المالي.
+              نلتزم بتقديم وساطة عقارية احترافية وعقود موثقة لنضمن لكل عميل حقوقاً مصانة وصفقات آمنة بأعلى معايير الشفافية والموثوقية المالية.
             </p>
           </div>
 
@@ -128,13 +128,13 @@ export default function AboutPage() {
           <div className="space-y-3 text-center md:text-right">
             <div className="inline-flex items-center gap-2 text-amber-400 text-xs font-bold">
               <ShieldCheck className="w-4 h-4" />
-              <span>اعتمادات وتراخيص رسمية</span>
+              <span>وساطة وتسويق موثوق</span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-extrabold">
-              منشأة وساطة معتمدة من الهيئة العامة للعقار
+              منشأة وساطة واستثمار عقاري احترافية
             </h3>
             <p className="text-slate-300 text-sm max-w-xl">
-              رخصة فال للوساطة والتسويق العقاري رقم: <span className="text-amber-400 font-mono font-bold text-base">{AGENCY_CONFIG.falLicense}</span>. جميع العقود موثقة عبر شبكة إيجار ومنصة البورصة العقارية لوزارة العدل.
+              السجل التجاري رقم: <span className="text-amber-400 font-mono font-bold text-base">{AGENCY_CONFIG.crNumber}</span>. جميع التعاملات والعقود تتم بأعلى مستويات الاحترافية والأمان لحماية مصالح عملائنا.
             </p>
           </div>
 

@@ -318,7 +318,7 @@ function PropertyDetailsContent() {
                   <h4 className="font-bold text-base text-slate-900">{AGENCY_CONFIG.name}</h4>
                   <div className="flex items-center gap-1 text-xs text-amber-600 font-semibold">
                     <ShieldCheck className="w-3.5 h-3.5" />
-                    <span>وسيط عقاري معتمد (فال)</span>
+                    <span>وسيط عقاري معتمد</span>
                   </div>
                 </div>
               </div>

@@ -77,7 +77,7 @@ export default function HomePage() {
 
           {/* Subtitle */}
           <p className="text-slate-200 text-base sm:text-xl font-normal max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed">
-            نساعدك في إيجاد فيلا أحلامك، شقتك المثالية، أو أرضك الاستثمارية في أرقى أحياء المملكة بضمانات رسمية وترخيص فال المعتمد.
+            نساعدك في إيجاد فيلا أحلامك، شقتك المثالية، أو أرضك الاستثمارية في أرقى أحياء المملكة بضمانات رسمية وعقود موثقة.
           </p>
 
           {/* Search Filter Box */}
@@ -239,12 +239,12 @@ export default function HomePage() {
                     <ShieldCheck className="w-6 h-6" />
                   </div>
                   <div>
-                    <div className="font-bold text-sm">ترخيص ووساطة معتمدة</div>
-                    <div className="text-xs text-amber-400">فال: {AGENCY_CONFIG.falLicense}</div>
+                    <div className="font-bold text-sm">وساطة وتسويق معتمد</div>
+                    <div className="text-xs text-amber-400">س.ت: {AGENCY_CONFIG.crNumber}</div>
                   </div>
                 </div>
                 <p className="text-xs text-slate-400">
-                  كافة المعاملات والعقود تتم وفق الأنظمة الرسمية للهيئة العامة للعقار.
+                  كافة المعاملات والعقود تتم وفق أعلى معايير الأمان المالي والموثوقية.
                 </p>
               </div>
             </div>
