@@ -330,6 +330,13 @@ export default function HomePage() {
         onClose={() => setIsRequestModalOpen(false)}
       />
 
+      {/* Developer Credit Banner */}
+      <div className="bg-slate-900 border-t border-slate-800 py-3.5 px-4 text-center">
+        <p className="text-xs sm:text-sm font-bold text-slate-200">
+          تم تطوير هذا الموقع بواسطة <span className="text-amber-400 font-black">محمد نور بزاعي</span>.
+        </p>
+      </div>
+
       {/* Footer */}
       <Footer />
     </div>

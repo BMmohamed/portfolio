@@ -147,7 +147,12 @@ export default function Footer() {
 
         {/* Bottom copyright & admin link */}
         <div className="pt-8 mt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© 2026 {AGENCY_CONFIG.name}. جميع الحقوق محفوظة.</p>
+          <div className="space-y-1 text-center sm:text-right">
+            <p>© 2026 {AGENCY_CONFIG.name}. جميع الحقوق محفوظة.</p>
+            <p className="text-amber-400 font-bold text-xs tracking-wide">
+              تم تطوير هذا الموقع بواسطة محمد نور بزاعي.
+            </p>
+          </div>
           <div className="flex items-center gap-4">
             <Link href="/about" className="hover:text-slate-400 transition-colors">سياسة الخصوصية</Link>
             <span>•</span>
