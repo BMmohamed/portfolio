@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const cairo = Cairo({
@@ -27,6 +28,7 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" className={cairo.variable}>
       <body className="min-h-screen flex flex-col font-sans antialiased bg-slate-50 text-slate-800 selection:bg-amber-500 selection:text-white">
         {children}
+        <Analytics />
       </body>
     </html>
   );
