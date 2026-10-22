@@ -67,7 +67,7 @@ export default function HomePage() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
             <Sparkles className="w-4 h-4 text-amber-400" />
-            <span>المنصة الأولى للوساطة العقارية المعتمدة بالرياض والمملكة</span>
+            <span>المنصة الأولى للوساطة العقارية المعتمدة في دمشق وسوريا</span>
           </div>
 
           {/* Heading */}
@@ -77,7 +77,7 @@ export default function HomePage() {
 
           {/* Subtitle */}
           <p className="text-slate-200 text-base sm:text-xl font-normal max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed">
-            نساعدك في إيجاد فيلا أحلامك، شقتك المثالية، أو أرضك الاستثمارية في أرقى أحياء المملكة بضمانات رسمية وعقود موثقة.
+            نساعدك في إيجاد فيلا أحلامك، شقتك المثالية، أو أرضك الاستثمارية في أرقى المحافظات السورية بضمانات رسمية وعقود موثقة طابو أخضر.
           </p>
 
           {/* Search Filter Box */}
@@ -256,10 +256,10 @@ export default function HomePage() {
                 <span>من نحن</span>
               </div>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 leading-tight">
-                شركة {AGENCY_CONFIG.name}.. الريادة والموثوقية في السوق العقاري السعودي
+                شركة {AGENCY_CONFIG.name}.. الريادة والموثوقية في السوق العقاري السوري
               </h2>
               <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                تأسست شركة {AGENCY_CONFIG.name} كمنظومة وساطة واستشارات عقارية رائدة تقدم خدماتها للأفراد والشركات وصناديق الاستثمار في المملكة العربية السعودية. نرتكز على قيم الشفافية، الدقة، وتوظيف التقنيات الحديثة لنربط المشترين بأفضل الفرص الاستثمارية والوحدات السكنية.
+                تأسست شركة {AGENCY_CONFIG.name} كمنظومة وساطة واستشارات عقارية رائدة تقدم خدماتها للأفراد والمغتربين والشركات في سوريا. نرتكز على قيم الشفافية، الدقة، وتوظيف التقنيات الحديثة لنربط المشترين بأفضل الفرص الاستثمارية والوحدات السكنية ذات الطابو النظامي.
               </p>
 
               {/* Pillars */}
@@ -270,7 +270,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h4 className="font-bold text-sm text-slate-900">خبرة عميقة بالسوق</h4>
-                    <p className="text-xs text-slate-500">فريق متمرس يرصد مؤشرات السوق بدقة</p>
+                    <p className="text-xs text-slate-500">فريق متمرس يرصد حركة السوق والمناطق</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -278,8 +278,8 @@ export default function HomePage() {
                     <CheckCircle2 className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm text-slate-900">عقود رسمية موثقة</h4>
-                    <p className="text-xs text-slate-500">عبر منصة إيجار وبورصة العقار</p>
+                    <h4 className="font-bold text-sm text-slate-900">طابو نظامي وعقود موثقة</h4>
+                    <p className="text-xs text-slate-500">تدقيق كامل لدى المصالح العقارية</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

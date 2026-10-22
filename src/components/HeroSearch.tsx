@@ -69,12 +69,15 @@ export default function HeroSearch() {
               onChange={(e) => setCity(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:ring-2 focus:ring-sky-900 focus:outline-hidden transition-all"
             >
-              <option value="all">جميع المدن</option>
-              <option value="الرياض">الرياض</option>
-              <option value="جدة">جدة</option>
-              <option value="الخبر">الخبر</option>
-              <option value="الدمام">الدمام</option>
-              <option value="مكة المكرمة">مكة المكرمة</option>
+              <option value="all">جميع المحافظات السورية</option>
+              <option value="دمشق">دمشق</option>
+              <option value="ريف دمشق">ريف دمشق</option>
+              <option value="حلب">حلب</option>
+              <option value="اللاذقية">اللاذقية</option>
+              <option value="طرطوس">طرطوس</option>
+              <option value="حمص">حمص</option>
+              <option value="حماة">حماة</option>
+              <option value="السويداء">السويداء</option>
             </select>
           </div>
 
@@ -101,11 +104,11 @@ export default function HeroSearch() {
           <div className="flex flex-col">
             <label className="text-xs font-bold text-slate-600 mb-1 flex items-center gap-1.5">
               <Search className="w-3.5 h-3.5 text-slate-500" />
-              <span>الحي أو الكود</span>
+              <span>المنطقة أو الكود</span>
             </label>
             <input
               type="text"
-              placeholder="مثال: الملقا، REF-101"
+              placeholder="مثال: أبو رمانة، يعفور، REF-101"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:ring-2 focus:ring-sky-900 focus:outline-hidden transition-all"
@@ -132,11 +135,11 @@ export default function HeroSearch() {
             onClick={() => {
               setPurpose('sale');
               setType('villa');
-              setCity('الرياض');
+              setCity('ريف دمشق');
             }}
             className="hover:text-sky-900 underline underline-offset-2"
           >
-            فلل شمال الرياض
+            فلل يعفور وريف دمشق
           </button>
           <span>•</span>
           <button
@@ -144,23 +147,23 @@ export default function HeroSearch() {
             onClick={() => {
               setPurpose('sale');
               setType('apartment');
-              setCity('جدة');
+              setCity('اللاذقية');
             }}
             className="hover:text-sky-900 underline underline-offset-2"
           >
-            شقق كورنيش جدة
+            شقق كورنيش اللاذقية
           </button>
           <span>•</span>
           <button
             type="button"
             onClick={() => {
-              setPurpose('rent');
+              setPurpose('sale');
               setType('apartment');
-              setCity('الرياض');
+              setCity('دمشق');
             }}
             className="hover:text-sky-900 underline underline-offset-2"
           >
-            شقق إيجار سنوي
+            شقق دمشق الراقية
           </button>
         </div>
       </form>

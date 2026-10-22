@@ -135,8 +135,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           <div>
             <span className="text-[11px] text-slate-400 block font-medium">السعر</span>
             <div className="flex items-baseline gap-1 text-sky-950 font-black text-lg">
-              <span>{property.price.toLocaleString('ar-SA')}</span>
-              <span className="text-xs text-amber-600 font-bold">ر.س</span>
+              <span>{property.price.toLocaleString('ar-SY')}</span>
+              <span className="text-xs text-amber-600 font-bold">ل.س</span>
               {property.purpose === 'rent' && (
                 <span className="text-[11px] text-slate-500 font-normal">/ سنوياً</span>
               )}

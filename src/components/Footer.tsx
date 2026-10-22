@@ -78,7 +78,7 @@ export default function Footer() {
             <ul className="space-y-2.5 text-sm">
               <li>
                 <Link href="/properties?purpose=sale&type=villa" className="hover:text-amber-400 transition-colors">
-                  فلل وقصور للبيع بالرياض
+                  فلل وقصور فاخرة بدمشق وريفها
                 </Link>
               </li>
               <li>

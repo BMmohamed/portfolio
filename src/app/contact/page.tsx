@@ -55,7 +55,7 @@ export default function ContactPage() {
             تواصل مع فريق {AGENCY_CONFIG.name}
           </h1>
           <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            يسعدنا استقبال استفساراتكم واقتراحاتكم وزيارتكم في مقرنا بالرياض أو مراسلتنا مباشرة.
+            يسعدنا استقبال استفساراتكم واقتراحاتكم وزيارتكم في مقرنا بدمشق أو مراسلتنا مباشرة.
           </p>
         </div>
       </div>
@@ -145,7 +145,7 @@ export default function ContactPage() {
               <div className="aspect-16/9 bg-slate-100 rounded-2xl flex flex-col items-center justify-center text-center p-4 border border-slate-200 relative overflow-hidden">
                 <MapPin className="w-8 h-8 text-rose-500 mb-2 animate-bounce" />
                 <span className="font-bold text-xs text-slate-800">{AGENCY_CONFIG.name}</span>
-                <span className="text-[11px] text-slate-500">طريق الملك فهد، حي الملقا، الرياض</span>
+                <span className="text-[11px] text-slate-500">أوتوستراد المزة، برج الفردوس، دمشق</span>
               </div>
             </div>
           </div>

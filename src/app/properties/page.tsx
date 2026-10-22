@@ -191,23 +191,26 @@ function PropertiesContent() {
                 onChange={(e) => setCity(e.target.value)}
                 className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
               >
-                <option value="all">جميع المدن</option>
-                <option value="الرياض">الرياض</option>
-                <option value="جدة">جدة</option>
-                <option value="الخبر">الخبر</option>
-                <option value="الدمام">الدمام</option>
-                <option value="مكة المكرمة">مكة المكرمة</option>
+                <option value="all">جميع المحافظات</option>
+                <option value="دمشق">دمشق</option>
+                <option value="ريف دمشق">ريف دمشق</option>
+                <option value="حلب">حلب</option>
+                <option value="اللاذقية">اللاذقية</option>
+                <option value="طرطوس">طرطوس</option>
+                <option value="حمص">حمص</option>
+                <option value="حماة">حماة</option>
+                <option value="السويداء">السويداء</option>
               </select>
             </div>
 
             {/* Price Range */}
             <div>
               <label className="text-xs font-bold text-slate-600 mb-1 block">
-                السعر الأدنى (ر.س)
+                السعر الأدنى (ل.س)
               </label>
               <input
                 type="number"
-                placeholder="مثال: 500000"
+                placeholder="مثال: 50000000"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
                 className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
@@ -216,11 +219,11 @@ function PropertiesContent() {
 
             <div>
               <label className="text-xs font-bold text-slate-600 mb-1 block">
-                السعر الأقصى (ر.س)
+                السعر الأقصى (ل.س)
               </label>
               <input
                 type="number"
-                placeholder="مثال: 5000000"
+                placeholder="مثال: 5000000000"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
                 className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-sky-900 focus:outline-hidden"

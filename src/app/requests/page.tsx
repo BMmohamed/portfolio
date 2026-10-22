@@ -39,7 +39,7 @@ function RequestsContent() {
   const [phone, setPhone] = useState('');
   const [formPurpose, setFormPurpose] = useState<'buy' | 'rent'>('buy');
   const [formType, setFormType] = useState<PropertyType>('villa');
-  const [formCity, setFormCity] = useState('الرياض');
+  const [formCity, setFormCity] = useState('دمشق');
   const [district, setDistrict] = useState('');
   const [budgetMin, setBudgetMin] = useState('');
   const [budgetMax, setBudgetMax] = useState('');
@@ -160,10 +160,13 @@ function RequestsContent() {
               onChange={(e) => setCityFilter(e.target.value)}
               className="bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
             >
-              <option value="all">جميع المدن</option>
-              <option value="الرياض">الرياض</option>
-              <option value="جدة">جدة</option>
-              <option value="الخبر">الخبر</option>
+              <option value="all">جميع المحافظات</option>
+              <option value="دمشق">دمشق</option>
+              <option value="ريف دمشق">ريف دمشق</option>
+              <option value="حلب">حلب</option>
+              <option value="اللاذقية">اللاذقية</option>
+              <option value="طرطوس">طرطوس</option>
+              <option value="حمص">حمص</option>
             </select>
           </div>
 
@@ -228,9 +231,9 @@ function RequestsContent() {
                         <span>
                           الميزانية:{' '}
                           <span className="font-bold text-slate-900">
-                            {req.budgetMin ? req.budgetMin.toLocaleString('ar-SA') : '0'} - {req.budgetMax ? req.budgetMax.toLocaleString('ar-SA') : 'مفتوحة'}
+                            {req.budgetMin ? req.budgetMin.toLocaleString('ar-SY') : '0'} - {req.budgetMax ? req.budgetMax.toLocaleString('ar-SY') : 'مفتوحة'}
                           </span>{' '}
-                          ر.س
+                          ل.س
                         </span>
                       </div>
                     </div>
@@ -362,20 +365,22 @@ function RequestsContent() {
                         onChange={(e) => setFormCity(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
                       >
-                        <option value="الرياض">الرياض</option>
-                        <option value="جدة">جدة</option>
-                        <option value="الخبر">الخبر</option>
-                        <option value="الدمام">الدمام</option>
+                        <option value="دمشق">دمشق</option>
+                        <option value="ريف دمشق">ريف دمشق</option>
+                        <option value="حلب">حلب</option>
+                        <option value="اللاذقية">اللاذقية</option>
+                        <option value="طرطوس">طرطوس</option>
+                        <option value="حمص">حمص</option>
                       </select>
                     </div>
                     <div>
                       <label className="text-xs font-bold text-slate-700 mb-1 block">
-                        الحي المطلوب *
+                        المنطقة المطلوبة *
                       </label>
                       <input
                         type="text"
                         required
-                        placeholder="الملقا، حطين..."
+                        placeholder="أبو رمانة، يعفور..."
                         value={district}
                         onChange={(e) => setDistrict(e.target.value)}
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
@@ -385,7 +390,7 @@ function RequestsContent() {
 
                   <div>
                     <label className="text-xs font-bold text-slate-700 mb-1 block">
-                      الميزانية التقريبية (ر.س)
+                      الميزانية التقريبية (ل.س)
                     </label>
                     <div className="grid grid-cols-2 gap-2">
                       <input

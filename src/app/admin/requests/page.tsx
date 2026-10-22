@@ -36,7 +36,7 @@ export default function ManageRequestsPage() {
   const [clientPhone, setClientPhone] = useState('');
   const [purpose, setPurpose] = useState<'buy' | 'rent'>('buy');
   const [type, setType] = useState<PropertyType>('villa');
-  const [city, setCity] = useState('الرياض');
+  const [city, setCity] = useState('دمشق');
   const [district, setDistrict] = useState('');
   const [budgetMin, setBudgetMin] = useState('');
   const [budgetMax, setBudgetMax] = useState('');
@@ -254,9 +254,9 @@ export default function ManageRequestsPage() {
                   <span>
                     الميزانية:{' '}
                     <span className="font-bold text-slate-900">
-                      {req.budgetMin ? req.budgetMin.toLocaleString('ar-SA') : '0'} - {req.budgetMax ? req.budgetMax.toLocaleString('ar-SA') : 'مفتوحة'}
+                      {req.budgetMin ? req.budgetMin.toLocaleString('ar-SY') : '0'} - {req.budgetMax ? req.budgetMax.toLocaleString('ar-SY') : 'مفتوحة'}
                     </span>{' '}
-                    ر.س
+                    ل.س
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -424,10 +424,14 @@ export default function ManageRequestsPage() {
                     onChange={(e) => setCity(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
                   >
-                    <option value="الرياض">الرياض</option>
-                    <option value="جدة">جدة</option>
-                    <option value="الخبر">الخبر</option>
-                    <option value="الدمام">الدمام</option>
+                    <option value="دمشق">دمشق</option>
+                    <option value="ريف دمشق">ريف دمشق</option>
+                    <option value="حلب">حلب</option>
+                    <option value="اللاذقية">اللاذقية</option>
+                    <option value="طرطوس">طرطوس</option>
+                    <option value="حمص">حمص</option>
+                    <option value="حماة">حماة</option>
+                    <option value="السويداء">السويداء</option>
                   </select>
                 </div>
                 <div>
@@ -447,7 +451,7 @@ export default function ManageRequestsPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-bold text-slate-700 mb-1 block">
-                    الميزانية الأدنى (ر.س)
+                    الميزانية الأدنى (ل.س)
                   </label>
                   <input
                     type="number"
@@ -458,7 +462,7 @@ export default function ManageRequestsPage() {
                 </div>
                 <div>
                   <label className="text-xs font-bold text-slate-700 mb-1 block">
-                    الميزانية الأقصى (ر.س)
+                    الميزانية الأقصى (ل.س)
                   </label>
                   <input
                     type="number"

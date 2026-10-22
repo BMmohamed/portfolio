@@ -16,7 +16,7 @@ export default function AddRequestModal({ isOpen, onClose, onSuccess }: AddReque
   const [clientPhone, setClientPhone] = useState('');
   const [purpose, setPurpose] = useState<'buy' | 'rent'>('buy');
   const [type, setType] = useState<PropertyType>('villa');
-  const [city, setCity] = useState('الرياض');
+  const [city, setCity] = useState('دمشق');
   const [district, setDistrict] = useState('');
   const [budgetMin, setBudgetMin] = useState('');
   const [budgetMax, setBudgetMax] = useState('');
@@ -145,7 +145,7 @@ export default function AddRequestModal({ isOpen, onClose, onSuccess }: AddReque
                     type="tel"
                     required
                     dir="ltr"
-                    placeholder="+966 5x xxx xxxx"
+                    placeholder="+963 9xx xxx xxx"
                     value={clientPhone}
                     onChange={(e) => setClientPhone(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-sky-900 focus:outline-hidden text-right"
@@ -207,31 +207,33 @@ export default function AddRequestModal({ isOpen, onClose, onSuccess }: AddReque
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-bold text-slate-700 mb-1 block">
-                    المدينة *
+                    المدينة / المحافظة *
                   </label>
                   <select
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
                   >
-                    <option value="الرياض">الرياض</option>
-                    <option value="جدة">جدة</option>
-                    <option value="الخبر">الخبر</option>
-                    <option value="الدمام">الدمام</option>
-                    <option value="مكة المكرمة">مكة المكرمة</option>
-                    <option value="المدينة المنورة">المدينة المنورة</option>
+                    <option value="دمشق">دمشق</option>
+                    <option value="ريف دمشق">ريف دمشق</option>
+                    <option value="حلب">حلب</option>
+                    <option value="اللاذقية">اللاذقية</option>
+                    <option value="طرطوس">طرطوس</option>
+                    <option value="حمص">حمص</option>
+                    <option value="حماة">حماة</option>
+                    <option value="السويداء">السويداء</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="text-xs font-bold text-slate-700 mb-1 flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5 text-amber-500" />
-                    <span>الأحياء المفضلة *</span>
+                    <span>المناطق المفضلة *</span>
                   </label>
                   <input
                     type="text"
                     required
-                    placeholder="مثال: الملقا، حطين، النرجس"
+                    placeholder="مثال: أبو رمانة، المالكي، يعفور"
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
@@ -243,11 +245,11 @@ export default function AddRequestModal({ isOpen, onClose, onSuccess }: AddReque
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="text-xs font-bold text-slate-700 mb-1 block">
-                    الميزانية من (ر.س)
+                    الميزانية من (ل.س)
                   </label>
                   <input
                     type="number"
-                    placeholder="مثال: 1000000"
+                    placeholder="مثال: 50000000"
                     value={budgetMin}
                     onChange={(e) => setBudgetMin(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
@@ -255,11 +257,11 @@ export default function AddRequestModal({ isOpen, onClose, onSuccess }: AddReque
                 </div>
                 <div>
                   <label className="text-xs font-bold text-slate-700 mb-1 block">
-                    الميزانية حتى (ر.س)
+                    الميزانية حتى (ل.س)
                   </label>
                   <input
                     type="number"
-                    placeholder="مثال: 3500000"
+                    placeholder="مثال: 2000000000"
                     value={budgetMax}
                     onChange={(e) => setBudgetMax(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
