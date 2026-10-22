@@ -231,7 +231,7 @@ export default function AdminDashboardPage() {
                       {prop.code}
                     </td>
                     <td className="py-4 px-6 font-bold text-slate-900 text-xs sm:text-sm">
-                      {prop.price.toLocaleString('ar-SY')} <span className="text-xs text-amber-600">ل.س</span>
+                      {prop.price.toLocaleString('en-US')} <span className="text-xs text-amber-600">$</span>
                     </td>
                     <td className="py-4 px-6">
                       {prop.status === 'available' && (
@@ -324,7 +324,7 @@ export default function AdminDashboardPage() {
                     {req.city} - {req.district}
                   </td>
                   <td className="py-4 px-6 text-xs font-bold text-slate-900">
-                    {req.budgetMax ? `${req.budgetMax.toLocaleString('ar-SY')} ل.س` : 'مفتوحة'}
+                    {req.budgetMax ? `${req.budgetMax.toLocaleString('en-US')} $` : 'مفتوحة'}
                   </td>
                   <td className="py-4 px-6">
                     {req.status === 'approved' && (

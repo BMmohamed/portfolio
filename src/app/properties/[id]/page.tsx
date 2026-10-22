@@ -157,8 +157,8 @@ function PropertyDetailsContent() {
             <div>
               <span className="text-xs text-slate-500 block">السعر المطلوب</span>
               <div className="flex items-baseline gap-1 text-2xl sm:text-3xl font-black text-sky-950">
-                <span>{property.price.toLocaleString('ar-SY')}</span>
-                <span className="text-sm font-bold text-amber-600">ل.س</span>
+                <span>{property.price.toLocaleString('en-US')}</span>
+                <span className="text-sm font-bold text-amber-600">$</span>
                 {property.purpose === 'rent' && (
                   <span className="text-xs text-slate-500 font-normal">/ سنوياً</span>
                 )}

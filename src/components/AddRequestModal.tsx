@@ -245,11 +245,11 @@ export default function AddRequestModal({ isOpen, onClose, onSuccess }: AddReque
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="text-xs font-bold text-slate-700 mb-1 block">
-                    الميزانية من (ل.س)
+                    الميزانية من ($)
                   </label>
                   <input
                     type="number"
-                    placeholder="مثال: 50000000"
+                    placeholder="مثال: 50000"
                     value={budgetMin}
                     onChange={(e) => setBudgetMin(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
@@ -257,11 +257,11 @@ export default function AddRequestModal({ isOpen, onClose, onSuccess }: AddReque
                 </div>
                 <div>
                   <label className="text-xs font-bold text-slate-700 mb-1 block">
-                    الميزانية حتى (ل.س)
+                    الميزانية حتى ($)
                   </label>
                   <input
                     type="number"
-                    placeholder="مثال: 2000000000"
+                    placeholder="مثال: 300000"
                     value={budgetMax}
                     onChange={(e) => setBudgetMax(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-sky-900 focus:outline-hidden"

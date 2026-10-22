@@ -355,7 +355,7 @@ function ManagePropertiesContent() {
 
                   {/* Price */}
                   <td className="py-4 px-6 text-xs font-bold text-slate-900">
-                    {prop.price.toLocaleString('ar-SY')} <span className="text-amber-600">ل.س</span>
+                    {prop.price.toLocaleString('en-US')} <span className="text-amber-600">$</span>
                   </td>
 
                   {/* Instant Status Toggle Dropdown / Buttons */}
@@ -512,12 +512,12 @@ function ManagePropertiesContent() {
 
                 <div>
                   <label className="text-xs font-bold text-slate-700 mb-1 block">
-                    السعر (ل.س) *
+                    السعر ($) *
                   </label>
                   <input
                     type="number"
                     required
-                    placeholder="مثال: 2500000"
+                    placeholder="مثال: 250000"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-sky-900 focus:outline-hidden"

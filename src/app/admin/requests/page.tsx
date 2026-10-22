@@ -254,9 +254,9 @@ export default function ManageRequestsPage() {
                   <span>
                     الميزانية:{' '}
                     <span className="font-bold text-slate-900">
-                      {req.budgetMin ? req.budgetMin.toLocaleString('ar-SY') : '0'} - {req.budgetMax ? req.budgetMax.toLocaleString('ar-SY') : 'مفتوحة'}
+                      {req.budgetMin ? req.budgetMin.toLocaleString('en-US') : '0'} - {req.budgetMax ? req.budgetMax.toLocaleString('en-US') : 'مفتوحة'}
                     </span>{' '}
-                    ل.س
+                    $
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -451,7 +451,7 @@ export default function ManageRequestsPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-bold text-slate-700 mb-1 block">
-                    الميزانية الأدنى (ل.س)
+                    الميزانية الأدنى ($)
                   </label>
                   <input
                     type="number"
@@ -462,7 +462,7 @@ export default function ManageRequestsPage() {
                 </div>
                 <div>
                   <label className="text-xs font-bold text-slate-700 mb-1 block">
-                    الميزانية الأقصى (ل.س)
+                    الميزانية الأقصى ($)
                   </label>
                   <input
                     type="number"

@@ -1,5 +1,5 @@
 // Service Worker for Ruya Real Estate PWA / Android TWA
-const CACHE_NAME = 'ruya-aqar-pwa-v9';
+const CACHE_NAME = 'ruya-aqar-pwa-v10';
 
 // Aggressive pre-caching assets
 const PRECACHE_ASSETS = [

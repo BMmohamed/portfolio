@@ -4,9 +4,9 @@ import { Property, PropertyRequest, AnalyticsSummary, PropertyStatus, RequestSta
 import { INITIAL_PROPERTIES, INITIAL_REQUESTS, AGENCY_CONFIG } from './data';
 
 const STORAGE_KEYS = {
-  PROPERTIES: 'ruya_aqar_properties_v2',
-  REQUESTS: 'ruya_aqar_requests_v2',
-  VISITS: 'ruya_aqar_visits_v2',
+  PROPERTIES: 'ruya_aqar_properties_v3',
+  REQUESTS: 'ruya_aqar_requests_v3',
+  VISITS: 'ruya_aqar_visits_v3',
   AUTH: 'ruya_aqar_admin_auth_v1',
 };
 

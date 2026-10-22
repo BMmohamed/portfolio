@@ -231,9 +231,9 @@ function RequestsContent() {
                         <span>
                           الميزانية:{' '}
                           <span className="font-bold text-slate-900">
-                            {req.budgetMin ? req.budgetMin.toLocaleString('ar-SY') : '0'} - {req.budgetMax ? req.budgetMax.toLocaleString('ar-SY') : 'مفتوحة'}
+                            {req.budgetMin ? req.budgetMin.toLocaleString('en-US') : '0'} - {req.budgetMax ? req.budgetMax.toLocaleString('en-US') : 'مفتوحة'}
                           </span>{' '}
-                          ل.س
+                          $
                         </span>
                       </div>
                     </div>
@@ -390,7 +390,7 @@ function RequestsContent() {
 
                   <div>
                     <label className="text-xs font-bold text-slate-700 mb-1 block">
-                      الميزانية التقريبية (ل.س)
+                      الميزانية التقريبية ($)
                     </label>
                     <div className="grid grid-cols-2 gap-2">
                       <input

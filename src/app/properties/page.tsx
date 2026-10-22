@@ -206,11 +206,11 @@ function PropertiesContent() {
             {/* Price Range */}
             <div>
               <label className="text-xs font-bold text-slate-600 mb-1 block">
-                السعر الأدنى (ل.س)
+                السعر الأدنى ($)
               </label>
               <input
                 type="number"
-                placeholder="مثال: 50000000"
+                placeholder="مثال: 50000"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
                 className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
@@ -219,11 +219,11 @@ function PropertiesContent() {
 
             <div>
               <label className="text-xs font-bold text-slate-600 mb-1 block">
-                السعر الأقصى (ل.س)
+                السعر الأقصى ($)
               </label>
               <input
                 type="number"
-                placeholder="مثال: 5000000000"
+                placeholder="مثال: 500000"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
                 className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
