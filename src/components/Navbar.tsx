@@ -50,13 +50,6 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
               <PhoneCall className="w-3.5 h-3.5 text-emerald-400" />
               <span dir="ltr">{AGENCY_CONFIG.mobile}</span>
             </a>
-            <span className="text-slate-600">|</span>
-            <Link
-              href="/admin/dashboard"
-              className="text-amber-400 hover:text-amber-300 font-medium transition-colors"
-            >
-              بوابة الإدارة
-            </Link>
           </div>
         </div>
       </div>

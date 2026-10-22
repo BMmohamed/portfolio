@@ -157,10 +157,6 @@ export default function Footer() {
             <Link href="/about" className="hover:text-slate-400 transition-colors">سياسة الخصوصية</Link>
             <span>•</span>
             <Link href="/about" className="hover:text-slate-400 transition-colors">شروط الاستخدام</Link>
-            <span>•</span>
-            <Link href="/admin/login" className="text-amber-500 hover:text-amber-400 font-semibold transition-colors">
-              دخول المشرفين
-            </Link>
           </div>
         </div>
       </div>
