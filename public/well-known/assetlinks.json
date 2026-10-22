@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.vercel.portflio_akar_pro.twa",
+        "sha256_cert_fingerprints": ["27:62:5E:71:2E:01:07:8D:A2:AF:E6:05:17:55:5C:DD:21:D4:D0:BA:2C:FE:2B:51:73:23:D2:04:71:94:A5:7B"]
+      }
+    }]
