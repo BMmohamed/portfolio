@@ -1,0 +1,101 @@
+{
+  "name": "رؤية العقارية | بوابتك للعقارات الفاخرة والاستثمار الموثوق",
+  "short_name": "رؤية العقارية",
+  "description": "الشركة الرائدة في الوساطة والتسويق العقاري بالمملكة العربية السعودية. نوفر أفضل الفلل، الشقق، والأراضي السكنية والتجارية في الرياض، جدة، والدمام.",
+  "id": "/?source=pwa",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "window-controls-overlay",
+    "minimal-ui"
+  ],
+  "orientation": "portrait-primary",
+  "lang": "ar",
+  "dir": "rtl",
+  "theme_color": "#0f172a",
+  "background_color": "#ffffff",
+  "categories": [
+    "business",
+    "lifestyle",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "تصفح العقارات",
+      "short_name": "العقارات",
+      "description": "استعراض كافة الفلل والشقق والأراضي المتاحة",
+      "url": "/properties?source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "الطلبات العقارية",
+      "short_name": "الطلبات",
+      "description": "استعراض وتقديم طلبات الشراء والإيجار",
+      "url": "/requests?source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "تواصل معنا",
+      "short_name": "اتصل بنا",
+      "description": "قنوات التواصل المباشرة وخدمة العملاء",
+      "url": "/contact?source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}
