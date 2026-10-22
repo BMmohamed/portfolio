@@ -1,7 +1,8 @@
 // Service Worker for Ruya Real Estate PWA / TWA
-const CACHE_NAME = 'ruya-aqar-pwa-v1';
+const CACHE_NAME = 'ruya-aqar-pwa-v2';
 const STATIC_ASSETS = [
   '/',
+  '/offline.html',
   '/manifest.json',
   '/favicon.ico',
   '/icon-192.png',
@@ -62,9 +63,11 @@ self.addEventListener('fetch', (event) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          // If HTML request failed and nothing in cache, return root
+          // If HTML navigation failed and nothing in cache, fallback to offline.html
           if (event.request.headers.get('accept')?.includes('text/html')) {
-            return caches.match('/');
+            return caches.match('/offline.html').then((offlineResponse) => {
+              return offlineResponse || caches.match('/');
+            });
           }
         });
       })

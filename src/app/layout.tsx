@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Cairo } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import SplashScreen from "@/components/SplashScreen";
+import OfflineDetector from "@/components/OfflineDetector";
 import "./globals.css";
 
 const cairo = Cairo({
@@ -68,6 +70,8 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" className={cairo.variable}>
       <body className="min-h-screen flex flex-col font-sans antialiased bg-slate-50 text-slate-800 selection:bg-amber-500 selection:text-white">
+        <SplashScreen />
+        <OfflineDetector />
         <ServiceWorkerRegister />
         {children}
         <Analytics />
