@@ -91,32 +91,52 @@ export default function AdminLayout({
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200"
+          aria-label="القائمة"
         >
           {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 
-      {/* Sidebar */}
+      {/* Mobile Backdrop Overlay (Click outside to close) */}
+      <div
+        onClick={() => setSidebarOpen(false)}
+        aria-hidden="true"
+        className={`fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-[2px] transition-opacity duration-300 md:hidden ${
+          sidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+      />
+
+      {/* Sidebar (Takes ~70% on mobile, standard w-64 on desktop) */}
       <aside
-        className={`fixed md:sticky top-0 right-0 z-40 h-screen w-64 bg-slate-950 text-slate-300 flex flex-col justify-between border-l border-slate-800 transition-transform duration-300 ${
+        className={`fixed md:sticky top-0 right-0 z-50 h-screen w-[70vw] max-w-[310px] md:w-64 bg-slate-950 text-slate-300 flex flex-col justify-between border-l border-slate-800 transition-transform duration-300 ease-out shadow-2xl ${
           sidebarOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'
         }`}
       >
         <div>
-          {/* Logo / Header */}
-          <div className="p-6 border-b border-slate-800/80 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-amber-500 flex items-center justify-center text-white shadow-md">
-              <Building2 className="w-5 h-5" />
+          {/* Logo / Header with mobile close X */}
+          <div className="p-4 sm:p-6 border-b border-slate-800/80 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-amber-500 flex items-center justify-center text-white shadow-md">
+                <Building2 className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-base font-bold text-white tracking-wide">
+                  {AGENCY_CONFIG.name}
+                </h2>
+                <span className="text-[11px] text-amber-400 font-semibold flex items-center gap-1">
+                  <ShieldCheck className="w-3 h-3" />
+                  <span>لوحة التحكم الإدارية</span>
+                </span>
+              </div>
             </div>
-            <div>
-              <h2 className="text-base font-bold text-white tracking-wide">
-                {AGENCY_CONFIG.name}
-              </h2>
-              <span className="text-[11px] text-amber-400 font-semibold flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" />
-                <span>لوحة التحكم الإدارية</span>
-              </span>
-            </div>
+
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white md:hidden hover:bg-slate-900 transition-colors"
+              aria-label="إغلاق القائمة"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
           {/* Navigation Links */}
