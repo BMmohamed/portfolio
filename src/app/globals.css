@@ -10,7 +10,8 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    /* Fast native 120fps touch scrolling without artificial animation stutter */
+    -webkit-overflow-scrolling: touch;
     /* Disable Android pull-to-refresh & overscroll bounce at root */
     overscroll-behavior-y: none;
     overscroll-behavior-x: none;
