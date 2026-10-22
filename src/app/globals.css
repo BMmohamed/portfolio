@@ -12,13 +12,12 @@
   html {
     /* Fast native 120fps touch scrolling without artificial animation stutter */
     -webkit-overflow-scrolling: touch;
-    /* Disable Android pull-to-refresh & overscroll bounce at root */
-    overscroll-behavior-y: none;
-    overscroll-behavior-x: none;
-    overscroll-behavior: none;
-    overflow-x: hidden;
+    /* Allow normal desktop mouse wheel scroll while clipping horizontal overflow */
+    overflow-x: clip;
+    overflow-y: auto;
     width: 100%;
-    max-width: 100%;
+    /* Disable Android pull-to-refresh overscroll bounce at root */
+    overscroll-behavior-y: none;
   }
 
   body {
@@ -27,13 +26,9 @@
     font-family: var(--font-cairo), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: #f8fafc;
     color: #1e293b;
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
-    max-width: 100%;
     position: relative;
-    /* Prevent root bounce while maintaining buttery-smooth standard scrolling */
-    overscroll-behavior-y: none;
-    overscroll-behavior: none;
     /* Native App touch experience: disable accidental text selection across page elements */
     -webkit-user-select: none;
     -moz-user-select: none;
