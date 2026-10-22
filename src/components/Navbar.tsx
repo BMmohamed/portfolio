@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -55,40 +55,48 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
   }, [mobileMenuOpen]);
 
   const [showHeader, setShowHeader] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollYRef = useRef(0);
+  const tickingRef = useRef(false);
 
   // Smart Header: hide when scrolling down, reveal instantly when scrolling up
   useEffect(() => {
-    let ticking = false;
+    lastScrollYRef.current = window.scrollY || document.documentElement.scrollTop || 0;
+
+    const updateHeader = () => {
+      const currentScrollY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      const prevScrollY = lastScrollYRef.current;
+      const diff = currentScrollY - prevScrollY;
+
+      // Always show when near the top of the page (within 40px)
+      if (currentScrollY <= 40) {
+        setShowHeader(true);
+      } else if (diff > 8 && currentScrollY > 70) {
+        // Scrolling down -> hide header
+        setShowHeader(false);
+      } else if (diff < -4) {
+        // Scrolling up -> reveal header immediately
+        setShowHeader(true);
+      }
+
+      lastScrollYRef.current = currentScrollY;
+      tickingRef.current = false;
+    };
 
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const currentScrollY = window.scrollY;
-
-          // Always visible near the top of the page
-          if (currentScrollY <= 60) {
-            setShowHeader(true);
-          } else if (currentScrollY > lastScrollY && currentScrollY - lastScrollY > 8) {
-            // Scrolling down -> hide header
-            setShowHeader(false);
-          } else if (currentScrollY < lastScrollY && lastScrollY - currentScrollY > 6) {
-            // Scrolling up -> reveal header
-            setShowHeader(true);
-          }
-
-          setLastScrollY(currentScrollY);
-          ticking = false;
-        });
-        ticking = true;
+      if (!tickingRef.current) {
+        tickingRef.current = true;
+        window.requestAnimationFrame(updateHeader);
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('scroll', handleScroll, { passive: true });
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollY]);
+  }, []);
 
   const navLinks = [
     { name: 'الرئيسية', href: '/' },
@@ -109,9 +117,12 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-transform duration-300 ease-in-out ${
+      className={`sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-transform duration-300 ease-in-out will-change-transform ${
         isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
       }`}
+      style={{
+        transform: isHeaderVisible ? 'translateY(0%)' : 'translateY(-100%)',
+      }}
     >
       {/* Top micro bar for license & contact */}
       <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-4 sm:px-6">
