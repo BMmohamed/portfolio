@@ -116,14 +116,15 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
   const isHeaderVisible = showHeader || mobileMenuOpen;
 
   return (
-    <header
-      className={`sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-transform duration-300 ease-in-out will-change-transform ${
-        isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
-      }`}
-      style={{
-        transform: isHeaderVisible ? 'translateY(0%)' : 'translateY(-100%)',
-      }}
-    >
+    <>
+      <header
+        className={`fixed top-0 inset-x-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-transform duration-300 ease-in-out will-change-transform ${
+          isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
+        style={{
+          transform: isHeaderVisible ? 'translateY(0%)' : 'translateY(-100%)',
+        }}
+      >
       {/* Top micro bar for license & contact */}
       <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -341,5 +342,8 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
           document.body
         )}
     </header>
+    {/* Spacer to preserve document layout under fixed header */}
+    <div className="h-[109px] w-full shrink-0" aria-hidden="true" />
+  </>
   );
 }
