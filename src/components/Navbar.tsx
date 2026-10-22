@@ -54,6 +54,42 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
     }
   }, [mobileMenuOpen]);
 
+  const [showHeader, setShowHeader] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Smart Header: hide when scrolling down, reveal instantly when scrolling up
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+
+          // Always visible near the top of the page
+          if (currentScrollY <= 60) {
+            setShowHeader(true);
+          } else if (currentScrollY > lastScrollY && currentScrollY - lastScrollY > 8) {
+            // Scrolling down -> hide header
+            setShowHeader(false);
+          } else if (currentScrollY < lastScrollY && lastScrollY - currentScrollY > 6) {
+            // Scrolling up -> reveal header
+            setShowHeader(true);
+          }
+
+          setLastScrollY(currentScrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY]);
+
   const navLinks = [
     { name: 'الرئيسية', href: '/' },
     { name: 'العروض العقارية', href: '/properties' },
@@ -69,8 +105,14 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
     return false;
   };
 
+  const isHeaderVisible = showHeader || mobileMenuOpen;
+
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all">
+    <header
+      className={`sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-transform duration-300 ease-in-out ${
+        isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
       {/* Top micro bar for license & contact */}
       <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
