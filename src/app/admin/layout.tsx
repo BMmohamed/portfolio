@@ -52,6 +52,17 @@ export default function AdminLayout({
     return () => window.removeEventListener('aqar_requests_updated', checkPending);
   }, [pathname, isLoginPage, router]);
 
+  // Lock body scroll on mobile when sidebar is open
+  useEffect(() => {
+    if (sidebarOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [sidebarOpen]);
+
   if (isLoginPage) {
     return <>{children}</>;
   }
@@ -99,18 +110,29 @@ export default function AdminLayout({
 
       {/* Mobile Backdrop Overlay (Click outside to close) */}
       <div
-        onClick={() => setSidebarOpen(false)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setSidebarOpen(false);
+        }}
+        onTouchStart={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          setSidebarOpen(false);
+        }}
         aria-hidden="true"
-        className={`fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-[2px] transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-40 bg-slate-950/45 backdrop-blur-[2px] transition-opacity duration-300 md:hidden cursor-pointer ${
           sidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
+        style={{ touchAction: 'none' }}
       />
 
       {/* Sidebar (Takes ~70% on mobile, standard w-64 on desktop) */}
       <aside
+        onClick={(e) => e.stopPropagation()}
         className={`fixed md:sticky top-0 right-0 z-50 h-screen w-[70vw] max-w-[310px] md:w-64 bg-slate-950 text-slate-300 flex flex-col justify-between border-l border-slate-800 transition-transform duration-300 ease-out shadow-2xl ${
           sidebarOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'
         }`}
+        style={{ touchAction: 'pan-y' }}
       >
         <div>
           {/* Logo / Header with mobile close X */}
