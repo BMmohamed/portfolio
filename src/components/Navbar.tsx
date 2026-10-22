@@ -56,26 +56,50 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
 
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollYRef = useRef(0);
+  const accumulatedDeltaRef = useRef(0);
+  const scrollDirectionRef = useRef<'up' | 'down'>('up');
   const tickingRef = useRef(false);
 
-  // Smart Header: hide when scrolling down, reveal instantly when scrolling up
+  // Smart Header: hide smoothly when scrolling down, reveal instantly anywhere when scrolling up
   useEffect(() => {
-    lastScrollYRef.current = window.scrollY || document.documentElement.scrollTop || 0;
+    const getScrollY = () =>
+      window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+
+    lastScrollYRef.current = getScrollY();
 
     const updateHeader = () => {
-      const currentScrollY = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      const currentScrollY = getScrollY();
       const prevScrollY = lastScrollYRef.current;
       const diff = currentScrollY - prevScrollY;
 
       // Always show when near the top of the page (within 40px)
       if (currentScrollY <= 40) {
         setShowHeader(true);
-      } else if (diff > 8 && currentScrollY > 70) {
-        // Scrolling down -> hide header
-        setShowHeader(false);
-      } else if (diff < -4) {
-        // Scrolling up -> reveal header immediately
-        setShowHeader(true);
+        accumulatedDeltaRef.current = 0;
+      } else if (diff > 0) {
+        // Moving DOWN
+        if (scrollDirectionRef.current !== 'down') {
+          scrollDirectionRef.current = 'down';
+          accumulatedDeltaRef.current = 0;
+        }
+        accumulatedDeltaRef.current += diff;
+
+        // Hide after scrolling down by at least 15px once past initial top area
+        if (accumulatedDeltaRef.current > 15 && currentScrollY > 70) {
+          setShowHeader(false);
+        }
+      } else if (diff < 0) {
+        // Moving UP
+        if (scrollDirectionRef.current !== 'up') {
+          scrollDirectionRef.current = 'up';
+          accumulatedDeltaRef.current = 0;
+        }
+        accumulatedDeltaRef.current += Math.abs(diff);
+
+        // Reveal header immediately after just 8px of upward scroll anywhere on page
+        if (accumulatedDeltaRef.current > 8) {
+          setShowHeader(true);
+        }
       }
 
       lastScrollYRef.current = currentScrollY;
@@ -118,12 +142,18 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
   return (
     <>
       <header
-        className={`fixed top-0 inset-x-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-transform duration-300 ease-in-out will-change-transform ${
-          isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
+        className={`fixed top-0 inset-x-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all duration-300 ease-in-out will-change-transform ${
+          isHeaderVisible
+            ? 'translate-y-0 opacity-100 pointer-events-auto'
+            : '-translate-y-full opacity-0 pointer-events-none'
         }`}
         style={{
           transform: isHeaderVisible ? 'translateY(0%)' : 'translateY(-100%)',
+          pointerEvents: isHeaderVisible ? 'auto' : 'none',
+          visibility: isHeaderVisible ? 'visible' : 'hidden',
+          transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.3s',
         }}
+        aria-hidden={!isHeaderVisible}
       >
       {/* Top micro bar for license & contact */}
       <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-4 sm:px-6">
