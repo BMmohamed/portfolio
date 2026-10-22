@@ -233,7 +233,7 @@ export default function HomePage() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="absolute -bottom-6 -right-6 sm:bottom-6 sm:right-6 bg-slate-950 text-white p-5 rounded-2xl shadow-xl max-w-xs border border-slate-800">
+              <div className="relative sm:absolute sm:bottom-6 sm:right-6 mt-4 sm:mt-0 bg-slate-950 text-white p-5 rounded-2xl shadow-xl max-w-xs border border-slate-800 mx-auto sm:mx-0">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="p-2 bg-amber-500 text-slate-950 rounded-lg">
                     <ShieldCheck className="w-6 h-6" />

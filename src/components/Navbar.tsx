@@ -20,13 +20,36 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
     setMounted(true);
   }, []);
 
-  // Prevent background scrolling and interactions when mobile menu is open
+  // Prevent background scrolling and intercept ANY outside click/touch before it reaches page elements
   useEffect(() => {
     if (mobileMenuOpen) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
+
+      // Intercept any click or touch outside the drawer during capture phase
+      const handleOutsideInteraction = (e: Event) => {
+        const drawer = document.getElementById('mobile-drawer-panel');
+        const target = e.target as Node | null;
+        if (drawer && target && !drawer.contains(target)) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          setMobileMenuOpen(false);
+        }
+      };
+
+      window.addEventListener('click', handleOutsideInteraction, { capture: true });
+      window.addEventListener('touchend', handleOutsideInteraction, { capture: true });
+      window.addEventListener('pointerup', handleOutsideInteraction, { capture: true });
+
       return () => {
         document.body.style.overflow = originalOverflow;
+        // Keep blocking stray ghost clicks for 350ms while the drawer slides out
+        setTimeout(() => {
+          window.removeEventListener('click', handleOutsideInteraction, { capture: true });
+          window.removeEventListener('touchend', handleOutsideInteraction, { capture: true });
+          window.removeEventListener('pointerup', handleOutsideInteraction, { capture: true });
+        }, 350);
       };
     }
   }, [mobileMenuOpen]);
@@ -149,13 +172,15 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
           <>
             {/* Mobile Backdrop Overlay: Functions as a full-screen button catching any touch/click to close */}
             <div
+              id="mobile-drawer-backdrop"
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 setMobileMenuOpen(false);
               }}
-              onTouchStart={(e) => {
-                e.stopPropagation();
+              onTouchEnd={(e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 setMobileMenuOpen(false);
               }}
               aria-label="إغلاق القائمة"
@@ -167,6 +192,7 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
 
             {/* Mobile Side Drawer (Slides from Right, ~70% screen width) */}
             <aside
+              id="mobile-drawer-panel"
               onClick={(e) => e.stopPropagation()}
               className={`fixed top-0 right-0 bottom-0 z-[9999] h-screen w-[70vw] max-w-[310px] bg-white text-slate-800 shadow-2xl flex flex-col justify-between border-l border-slate-200 transition-transform duration-300 ease-out sm:hidden ${
                 mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'

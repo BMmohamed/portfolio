@@ -52,13 +52,34 @@ export default function AdminLayout({
     return () => window.removeEventListener('aqar_requests_updated', checkPending);
   }, [pathname, isLoginPage, router]);
 
-  // Lock body scroll on mobile when sidebar is open
+  // Lock body scroll and intercept ANY outside click/touch before it reaches page elements
   useEffect(() => {
     if (sidebarOpen) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
+
+      const handleOutsideInteraction = (e: Event) => {
+        const drawer = document.getElementById('admin-drawer-panel');
+        const target = e.target as Node | null;
+        if (drawer && target && !drawer.contains(target)) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          setSidebarOpen(false);
+        }
+      };
+
+      window.addEventListener('click', handleOutsideInteraction, { capture: true });
+      window.addEventListener('touchend', handleOutsideInteraction, { capture: true });
+      window.addEventListener('pointerup', handleOutsideInteraction, { capture: true });
+
       return () => {
         document.body.style.overflow = originalOverflow;
+        setTimeout(() => {
+          window.removeEventListener('click', handleOutsideInteraction, { capture: true });
+          window.removeEventListener('touchend', handleOutsideInteraction, { capture: true });
+          window.removeEventListener('pointerup', handleOutsideInteraction, { capture: true });
+        }, 350);
       };
     }
   }, [sidebarOpen]);
@@ -128,6 +149,7 @@ export default function AdminLayout({
 
       {/* Sidebar (Takes ~70% on mobile, standard w-64 on desktop) */}
       <aside
+        id="admin-drawer-panel"
         onClick={(e) => e.stopPropagation()}
         className={`fixed md:sticky top-0 right-0 z-50 h-screen w-[70vw] max-w-[310px] md:w-64 bg-slate-950 text-slate-300 flex flex-col justify-between border-l border-slate-800 transition-transform duration-300 ease-out shadow-2xl ${
           sidebarOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'

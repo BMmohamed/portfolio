@@ -24,7 +24,7 @@ export default function AboutPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 w-full overflow-x-hidden">
       <Navbar onOpenRequestModal={() => setIsModalOpen(true)} />
 
       {/* Header Banner */}
@@ -69,7 +69,7 @@ export default function AboutPage() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="absolute -bottom-6 -left-6 bg-amber-500 text-slate-950 p-6 rounded-2xl shadow-xl max-w-xs font-bold text-sm">
+            <div className="relative sm:absolute sm:-bottom-6 sm:-left-6 mt-4 sm:mt-0 bg-amber-500 text-slate-950 p-5 sm:p-6 rounded-2xl shadow-xl max-w-xs font-bold text-xs sm:text-sm mx-auto sm:mx-0">
               رؤيتنا تتناغم مع مستهدفات رؤية المملكة 2030 لتطوير قطاع عقاري مستدام وجاذب.
             </div>
           </div>

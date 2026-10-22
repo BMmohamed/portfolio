@@ -15,6 +15,9 @@
     overscroll-behavior-y: none;
     overscroll-behavior-x: none;
     overscroll-behavior: none;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
   }
 
   body {
@@ -24,6 +27,9 @@
     background-color: #f8fafc;
     color: #1e293b;
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
     /* Prevent root bounce while maintaining buttery-smooth standard scrolling */
     overscroll-behavior-y: none;
     overscroll-behavior: none;
