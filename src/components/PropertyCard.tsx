@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, BedDouble, Bath, Maximize2, MessageCircle, Eye, ArrowLeft } from 'lucide-react';
+import { MapPin, BedDouble, Bath, Maximize2, MessageCircle, Eye, ArrowLeft, Play } from 'lucide-react';
 import { Property } from '@/types';
 import { getPropertyWhatsAppUrl, incrementPropertyWhatsApp } from '@/lib/store';
 
@@ -71,9 +71,17 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           <div>{statusBadge()}</div>
         </div>
 
-        {/* Code Badge */}
-        <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-xs text-white text-[11px] font-mono px-2 py-0.5 rounded">
-          {property.code}
+        {/* Code & Video Badges */}
+        <div className="absolute bottom-3 right-3 flex items-center gap-1.5">
+          <div className="bg-black/60 backdrop-blur-xs text-white text-[11px] font-mono px-2 py-0.5 rounded">
+            {property.code}
+          </div>
+          {property.videoUrl && (
+            <div className="bg-rose-600/95 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm flex items-center gap-1">
+              <Play className="w-2.5 h-2.5 fill-white" />
+              <span>فيديو</span>
+            </div>
+          )}
         </div>
 
         {/* Views counter badge */}

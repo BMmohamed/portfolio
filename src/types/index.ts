@@ -25,6 +25,7 @@ export interface Property {
   parking?: number;
   status: PropertyStatus; // 'available' = متاح, 'reserved' = محجوز, 'sold' = تم البيع
   images: string[];
+  videoUrl?: string; // YouTube video link (optional)
   features: string[];
   viewsCount: number;
   whatsappClicks: number;

@@ -18,7 +18,15 @@ import {
   Building2,
   MapPin,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Play,
+  Star,
+  ArrowRight,
+  ArrowLeft,
+  ArrowUp,
+  ArrowDown,
+  Video,
+  GripVertical
 } from 'lucide-react';
 import { 
   getStoredProperties, 
@@ -27,6 +35,11 @@ import {
   updatePropertyStatus, 
   deleteProperty 
 } from '@/lib/store';
+import { 
+  extractYouTubeId, 
+  getYouTubeEmbedUrl, 
+  getYouTubeWatchUrl 
+} from '@/lib/youtube';
 import { Property, PropertyPurpose, PropertyType, PropertyStatus } from '@/types';
 
 // Preset high quality photos for quick admin selection
@@ -70,8 +83,37 @@ function ManagePropertiesContent() {
   const [status, setStatus] = useState<PropertyStatus>('available');
   const [imageUrl, setImageUrl] = useState('');
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [videoUrl, setVideoUrl] = useState('');
   const [featuresInput, setFeaturesInput] = useState('مسبح خاص، مصعد، تكييف مركزي، غرفة خادمة');
   const [featured, setFeatured] = useState(false);
+  const [draggedImageIndex, setDraggedImageIndex] = useState<number | null>(null);
+
+  // Image reordering handlers
+  const handleMakeCover = (index: number) => {
+    if (index === 0) return;
+    const newImages = [...selectedImages];
+    const [target] = newImages.splice(index, 1);
+    newImages.unshift(target);
+    setSelectedImages(newImages);
+  };
+
+  const handleMoveImage = (index: number, direction: 'prev' | 'next') => {
+    const targetIndex = direction === 'prev' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= selectedImages.length) return;
+    const newImages = [...selectedImages];
+    const temp = newImages[index];
+    newImages[index] = newImages[targetIndex];
+    newImages[targetIndex] = temp;
+    setSelectedImages(newImages);
+  };
+
+  const handleSetPosition = (fromIndex: number, toIndex: number) => {
+    if (toIndex < 0 || toIndex >= selectedImages.length || fromIndex === toIndex) return;
+    const newImages = [...selectedImages];
+    const [target] = newImages.splice(fromIndex, 1);
+    newImages.splice(toIndex, 0, target);
+    setSelectedImages(newImages);
+  };
 
   const loadProperties = () => {
     setProperties(getStoredProperties());
@@ -101,6 +143,7 @@ function ManagePropertiesContent() {
     setStatus('available');
     setImageUrl('');
     setSelectedImages([PRESET_IMAGES[0].url]);
+    setVideoUrl('');
     setFeaturesInput('مسبح خاص، مصعد، تكييف مركزي، غرفة خادمة');
     setFeatured(false);
     setEditingProperty(null);
@@ -129,6 +172,7 @@ function ManagePropertiesContent() {
     setParking(prop.parking?.toString() || '1');
     setStatus(prop.status);
     setSelectedImages(prop.images.length > 0 ? prop.images : [PRESET_IMAGES[0].url]);
+    setVideoUrl(prop.videoUrl || '');
     setFeaturesInput(prop.features.join('، '));
     setFeatured(prop.featured);
     setIsModalOpen(true);
@@ -144,6 +188,7 @@ function ManagePropertiesContent() {
       .filter(Boolean);
 
     const imagesList = selectedImages.length > 0 ? selectedImages : [PRESET_IMAGES[0].url];
+    const cleanVideoUrl = videoUrl.trim() || undefined;
 
     if (editingProperty) {
       updateProperty(editingProperty.id, {
@@ -160,6 +205,7 @@ function ManagePropertiesContent() {
         parking: Number(parking),
         location: { city, district, address },
         images: imagesList,
+        videoUrl: cleanVideoUrl,
         features: featuresList,
         status,
         featured,
@@ -179,6 +225,7 @@ function ManagePropertiesContent() {
         parking: Number(parking),
         location: { city, district, address },
         images: imagesList,
+        videoUrl: cleanVideoUrl,
         features: featuresList,
         status,
         featured,
@@ -330,9 +377,20 @@ function ManagePropertiesContent() {
                         <div className="font-bold text-slate-900 text-xs sm:text-sm line-clamp-1">
                           {prop.title}
                         </div>
-                        <span className="font-mono text-[11px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">
-                          {prop.code}
-                        </span>
+                        <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                          <span className="font-mono text-[11px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded font-bold">
+                            {prop.code}
+                          </span>
+                          {prop.videoUrl && extractYouTubeId(prop.videoUrl) && (
+                            <span className="inline-flex items-center gap-1 text-[10px] bg-red-50 text-red-600 font-bold px-1.5 py-0.5 rounded border border-red-200">
+                              <Play className="w-2.5 h-2.5 fill-red-600" />
+                              فيديو يوتيوب
+                            </span>
+                          )}
+                          <span className="text-[10px] text-slate-400 font-medium">
+                            ({prop.images.length} صور)
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -657,18 +715,28 @@ function ManagePropertiesContent() {
                 />
               </div>
 
-              {/* Photos selection (Preset pickers + custom URL) */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 block">
-                  صور العقار (اختر من الصور الجاهزة أو ضع رابط مخصص)
-                </label>
+              {/* Photos management & custom ordering */}
+              <div className="bg-slate-50/80 rounded-2xl p-4 border border-slate-200 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <div>
+                    <label className="text-xs font-bold text-slate-900 flex items-center gap-2">
+                      <ImageIcon className="w-4 h-4 text-sky-900" />
+                      <span>صور العقار وتخصيص الترتيب ({selectedImages.length} صور)</span>
+                    </label>
+                    <p className="text-[11px] text-slate-500 mt-0.5">
+                      الصورة رقم 1 هي <strong className="text-amber-700">صورة الواجهة الرئيسية (الغلاف)</strong> التي ستظهر في الموقع. يمكنك تقديم أو تأخير أي صورة أو جعلها بالواجهة بنقرة واحدة، أو سحبها وإفلاتها.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Input custom image URL */}
                 <div className="flex gap-2">
                   <input
                     type="url"
-                    placeholder="https://images.unsplash.com/..."
+                    placeholder="ضع رابط صورة مباشرة: https://images.unsplash.com/..."
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-sky-900 focus:outline-hidden"
                   />
                   <button
                     type="button"
@@ -678,16 +746,16 @@ function ManagePropertiesContent() {
                         setImageUrl('');
                       }
                     }}
-                    className="bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-bold cursor-pointer shrink-0"
+                    className="bg-sky-900 hover:bg-sky-950 text-white px-4 py-2 rounded-xl text-xs font-bold cursor-pointer shrink-0 transition-colors"
                   >
-                    إضافة صورة
+                    + إضافة صورة
                   </button>
                 </div>
 
                 {/* Preset quick selection chips */}
-                <div className="pt-2">
+                <div>
                   <span className="text-[11px] text-slate-500 block mb-1.5 font-semibold">
-                    أو اختر صوراً معمارية جاهزة:
+                    أو اختر صوراً معمارية جاهزة لإضافتها:
                   </span>
                   <div className="flex flex-wrap gap-2">
                     {PRESET_IMAGES.map((preset, idx) => (
@@ -699,7 +767,7 @@ function ManagePropertiesContent() {
                             setSelectedImages([...selectedImages, preset.url]);
                           }
                         }}
-                        className="text-[11px] bg-sky-50 text-sky-900 hover:bg-sky-100 font-semibold px-2.5 py-1 rounded-lg border border-sky-200 transition-colors"
+                        className="text-[11px] bg-white hover:bg-sky-100 text-sky-950 font-semibold px-2.5 py-1 rounded-lg border border-slate-200 hover:border-sky-300 transition-colors cursor-pointer"
                       >
                         + {preset.label}
                       </button>
@@ -707,24 +775,241 @@ function ManagePropertiesContent() {
                   </div>
                 </div>
 
-                {/* Selected Images Preview */}
+                {/* Interactive Ordered Images Grid */}
                 {selectedImages.length > 0 && (
-                  <div className="flex flex-wrap gap-3 pt-2">
-                    {selectedImages.map((img, i) => (
-                      <div key={i} className="relative w-20 h-16 rounded-xl overflow-hidden border border-slate-200 group">
-                        <img src={img} alt="Property" className="w-full h-full object-cover" />
-                        <button
-                          type="button"
-                          onClick={() => setSelectedImages(selectedImages.filter((_, idx) => idx !== i))}
-                          className="absolute inset-0 bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))}
+                  <div className="pt-2 space-y-2">
+                    <div className="text-[11px] font-bold text-slate-600 flex items-center justify-between">
+                      <span>الصور المحددة (مرتبة حسب الأولوية):</span>
+                      <span className="text-slate-400 font-normal">اسحب لتغيير الترتيب أو استخدم أدوات التحكم</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                      {selectedImages.map((img, i) => {
+                        const isCover = i === 0;
+                        return (
+                          <div
+                            key={i}
+                            draggable
+                            onDragStart={(e) => {
+                              e.dataTransfer.setData('text/plain', i.toString());
+                              setDraggedImageIndex(i);
+                            }}
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              const srcStr = e.dataTransfer.getData('text/plain');
+                              if (srcStr) {
+                                const srcIdx = parseInt(srcStr, 10);
+                                if (!isNaN(srcIdx) && srcIdx !== i) {
+                                  handleSetPosition(srcIdx, i);
+                                }
+                              }
+                              setDraggedImageIndex(null);
+                            }}
+                            onDragEnd={() => setDraggedImageIndex(null)}
+                            className={`relative rounded-2xl overflow-hidden border-2 bg-white transition-all p-2.5 flex flex-col justify-between gap-2 shadow-xs ${
+                              isCover
+                                ? 'border-amber-400 bg-amber-50/30 ring-2 ring-amber-400/20'
+                                : 'border-slate-200 hover:border-sky-300'
+                            } ${draggedImageIndex === i ? 'opacity-40 scale-95' : 'opacity-100'}`}
+                          >
+                            {/* Image Header with Index & Cover badge */}
+                            <div className="flex items-center justify-between gap-1 text-[11px]">
+                              {isCover ? (
+                                <span className="bg-amber-500 text-white font-bold px-2 py-0.5 rounded-md flex items-center gap-1 shadow-xs">
+                                  <Star className="w-3 h-3 fill-white" />
+                                  <span>#1 الواجهة الرئيسية (الغلاف)</span>
+                                </span>
+                              ) : (
+                                <span className="bg-slate-800 text-white font-bold px-2 py-0.5 rounded-md">
+                                  الصورة #{i + 1}
+                                </span>
+                              )}
+
+                              <div className="flex items-center gap-1">
+                                <span className="text-[10px] text-slate-400 font-medium cursor-grab" title="اسحب للترتيب">
+                                  <GripVertical className="w-3.5 h-3.5 text-slate-400" />
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedImages(selectedImages.filter((_, idx) => idx !== i))}
+                                  className="text-slate-400 hover:text-rose-600 p-1 rounded hover:bg-rose-50 transition-colors"
+                                  title="حذف الصورة"
+                                >
+                                  <X className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Image Preview */}
+                            <div className="aspect-16/10 rounded-xl overflow-hidden bg-slate-100 border border-slate-100 relative group">
+                              <img src={img} alt={`صورة ${i + 1}`} className="w-full h-full object-cover" />
+                            </div>
+
+                            {/* Position Controls Bar */}
+                            <div className="flex items-center justify-between gap-1 pt-1 border-t border-slate-100">
+                              {/* Set as Cover button if not cover */}
+                              {!isCover ? (
+                                <button
+                                  type="button"
+                                  onClick={() => handleMakeCover(i)}
+                                  className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 px-2 py-1 rounded-lg transition-colors cursor-pointer"
+                                  title="جعل هذه الصورة كواجهة رئيسية رقم 1"
+                                >
+                                  <Star className="w-3 h-3 text-amber-600 fill-amber-500" />
+                                  <span>اجعلها بالواجهة</span>
+                                </button>
+                              ) : (
+                                <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-200">
+                                  ✓ صورة العرض الأولى
+                                </span>
+                              )}
+
+                              {/* Direct Position Picker & Step Arrows */}
+                              <div className="flex items-center gap-1">
+                                {/* Move backward (earlier position) */}
+                                <button
+                                  type="button"
+                                  disabled={i === 0}
+                                  onClick={() => handleMoveImage(i, 'prev')}
+                                  className={`p-1 rounded-lg border text-xs ${
+                                    i === 0
+                                      ? 'text-slate-300 border-slate-100 cursor-not-allowed'
+                                      : 'text-slate-700 border-slate-200 hover:bg-slate-100 cursor-pointer'
+                                  }`}
+                                  title="تقديم موضع واحد للأمام"
+                                >
+                                  <ArrowRight className="w-3 h-3" />
+                                </button>
+
+                                {/* Direct position select */}
+                                <select
+                                  value={i}
+                                  onChange={(e) => handleSetPosition(i, parseInt(e.target.value, 10))}
+                                  className="bg-slate-100 border border-slate-200 rounded-lg px-1.5 py-0.5 text-[11px] font-bold text-slate-800 focus:outline-hidden"
+                                  title="تغيير الترتيب المباشر"
+                                >
+                                  {selectedImages.map((_, idx) => (
+                                    <option key={idx} value={idx}>
+                                      #{idx + 1}
+                                    </option>
+                                  ))}
+                                </select>
+
+                                {/* Move forward (later position) */}
+                                <button
+                                  type="button"
+                                  disabled={i === selectedImages.length - 1}
+                                  onClick={() => handleMoveImage(i, 'next')}
+                                  className={`p-1 rounded-lg border text-xs ${
+                                    i === selectedImages.length - 1
+                                      ? 'text-slate-300 border-slate-100 cursor-not-allowed'
+                                      : 'text-slate-700 border-slate-200 hover:bg-slate-100 cursor-pointer'
+                                  }`}
+                                  title="تأخير موضع واحد للخلف"
+                                >
+                                  <ArrowLeft className="w-3 h-3" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
               </div>
+
+              {/* YouTube Video Section */}
+              {(() => {
+                const ytId = extractYouTubeId(videoUrl);
+                const ytEmbed = ytId ? getYouTubeEmbedUrl(videoUrl) : null;
+                const ytWatch = ytId ? getYouTubeWatchUrl(videoUrl) : null;
+                const hasInput = videoUrl.trim().length > 0;
+
+                return (
+                  <div className="bg-red-50/40 rounded-2xl p-4 border border-red-200/80 space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                      <div>
+                        <label className="text-xs font-bold text-slate-900 flex items-center gap-2">
+                          <Play className="w-4 h-4 text-red-600 fill-red-600" />
+                          <span>رابط فيديو يوتيوب للعقار (اختياري)</span>
+                        </label>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          ضع رابط يوتيوب لجولة العقار (عادي، Shorts، أو youtu.be). سيتمكن الزوار من تشغيل الفيديو بالموقع مباشرة أو نقله ليوتيوب.
+                        </p>
+                      </div>
+
+                      {ytId && (
+                        <span className="inline-flex items-center gap-1 text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full self-start sm:self-auto">
+                          <Check className="w-3 h-3 text-emerald-700" />
+                          رابط صالح (ID: {ytId})
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <input
+                          type="text"
+                          placeholder="مثال: https://www.youtube.com/watch?v=... أو https://youtu.be/..."
+                          value={videoUrl}
+                          onChange={(e) => setVideoUrl(e.target.value)}
+                          className="w-full bg-white border border-slate-200 rounded-xl pr-3 pl-8 py-2 text-xs focus:ring-2 focus:ring-red-600 focus:outline-hidden"
+                        />
+                        {hasInput && (
+                          <button
+                            type="button"
+                            onClick={() => setVideoUrl('')}
+                            className="absolute left-2.5 top-2.5 text-slate-400 hover:text-slate-600"
+                            title="مسح الرابط"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+
+                      {ytWatch && (
+                        <a
+                          href={ytWatch}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-xl text-xs font-bold shrink-0 flex items-center gap-1.5 transition-colors cursor-pointer"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          <span>فتح على YouTube</span>
+                        </a>
+                      )}
+                    </div>
+
+                    {/* Invalid notice if user typed something that is not youtube */}
+                    {hasInput && !ytId && (
+                      <div className="flex items-center gap-1.5 text-[11px] text-amber-700 bg-amber-50 border border-amber-200 p-2 rounded-xl">
+                        <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                        <span>يرجى إدخال رابط يوتيوب صحيح (مثل: youtube.com/watch?v=... أو youtu.be/...)</span>
+                      </div>
+                    )}
+
+                    {/* Embedded preview player directly inside modal */}
+                    {ytEmbed && (
+                      <div className="pt-2">
+                        <span className="text-[11px] font-bold text-slate-700 block mb-1.5">
+                          معاينة مشغل الفيديو المباشر:
+                        </span>
+                        <div className="aspect-16/9 w-full max-w-md rounded-2xl overflow-hidden bg-black shadow-md border border-slate-200">
+                          <iframe
+                            src={ytEmbed}
+                            title="معاينة فيديو يوتيوب"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                            className="w-full h-full border-0"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
 
               {/* Status & Featured */}
               <div className="flex items-center justify-between pt-2 border-t border-slate-100">

@@ -19,7 +19,11 @@ import {
   ShieldCheck, 
   Calendar, 
   Calculator,
-  Compass
+  Compass,
+  Play,
+  ExternalLink,
+  Video,
+  Image as ImageIcon
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -34,6 +38,12 @@ import {
   getStoredProperties 
 } from '@/lib/store';
 import { AGENCY_CONFIG } from '@/lib/data';
+import { 
+  extractYouTubeId, 
+  getYouTubeEmbedUrl, 
+  getYouTubeWatchUrl, 
+  getYouTubeThumbnailUrl 
+} from '@/lib/youtube';
 import { Property } from '@/types';
 
 function PropertyDetailsContent() {
@@ -42,6 +52,7 @@ function PropertyDetailsContent() {
   const id = typeof routeParams?.id === 'string' ? routeParams.id : Array.isArray(routeParams?.id) ? routeParams.id[0] : '';
   const [property, setProperty] = useState<Property | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [mediaMode, setMediaMode] = useState<'photos' | 'video'>('photos');
   const [copied, setCopied] = useState(false);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
@@ -175,38 +186,139 @@ function PropertyDetailsContent() {
           </div>
         </div>
 
-        {/* Gallery Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-10">
-          {/* Main big image */}
-          <div className="lg:col-span-3 aspect-16/10 rounded-3xl overflow-hidden shadow-md bg-slate-200 relative">
-            <img
-              src={property.images[activeImageIndex] || property.images[0]}
-              alt={property.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
+        {/* Media (Gallery + YouTube Video) */}
+        {(() => {
+          const hasVideo = Boolean(property.videoUrl && extractYouTubeId(property.videoUrl));
+          const youtubeEmbedUrl = hasVideo ? getYouTubeEmbedUrl(property.videoUrl) : null;
+          const youtubeWatchUrl = hasVideo ? getYouTubeWatchUrl(property.videoUrl) : null;
 
-          {/* Thumbnails column */}
-          <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible">
-            {property.images.map((img, idx) => (
-              <button
-                key={idx}
-                onClick={() => setActiveImageIndex(idx)}
-                className={`relative shrink-0 lg:shrink aspect-16/10 w-28 lg:w-full rounded-2xl overflow-hidden border-2 transition-all cursor-pointer ${
-                  activeImageIndex === idx
-                    ? 'border-amber-500 ring-2 ring-amber-500/30'
-                    : 'border-transparent opacity-70 hover:opacity-100'
-                }`}
-              >
-                <img
-                  src={img}
-                  alt={`صورة ${idx + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
-        </div>
+          return (
+            <div className="mb-10">
+              {/* Media Switcher Tabs if Video is available */}
+              {hasVideo && (
+                <div className="flex items-center gap-2 mb-3">
+                  <button
+                    onClick={() => setMediaMode('photos')}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      mediaMode === 'photos'
+                        ? 'bg-sky-900 text-white shadow-md'
+                        : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                    }`}
+                  >
+                    <ImageIcon className="w-4 h-4" />
+                    <span>الصور الفوتوغرافية ({property.images.length})</span>
+                  </button>
+
+                  <button
+                    onClick={() => setMediaMode('video')}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      mediaMode === 'video'
+                        ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
+                        : 'bg-white text-slate-600 hover:bg-red-50 hover:text-red-600 border border-slate-200'
+                    }`}
+                  >
+                    <Play className="w-4 h-4 fill-current" />
+                    <span>جولة الفيديو (يوتيوب)</span>
+                    <span className="bg-red-100 text-red-800 text-[10px] px-1.5 py-0.5 rounded-full font-black">HD</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Gallery Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                {/* Main Viewport */}
+                <div className="lg:col-span-3 aspect-16/10 rounded-3xl overflow-hidden shadow-md bg-slate-900 relative">
+                  {mediaMode === 'video' && hasVideo ? (
+                    <div className="w-full h-full relative">
+                      <iframe
+                        src={youtubeEmbedUrl || ''}
+                        title={property.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        className="w-full h-full border-0"
+                      />
+                      {/* Direct YouTube link button overlay */}
+                      <div className="absolute top-3 left-3 flex items-center gap-2 pointer-events-auto">
+                        <a
+                          href={youtubeWatchUrl || '#'}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-black/80 hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl backdrop-blur-md flex items-center gap-1.5 transition-all shadow-lg"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          <span>فتح على YouTube</span>
+                        </a>
+                      </div>
+                    </div>
+                  ) : (
+                    <img
+                      src={property.images[activeImageIndex] || property.images[0]}
+                      alt={property.title}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </div>
+
+                {/* Thumbnails column */}
+                <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible">
+                  {/* Video Thumbnail Button if available */}
+                  {hasVideo && (
+                    <button
+                      onClick={() => setMediaMode('video')}
+                      className={`relative shrink-0 lg:shrink aspect-16/10 w-28 lg:w-full rounded-2xl overflow-hidden border-2 transition-all cursor-pointer bg-slate-900 group ${
+                        mediaMode === 'video'
+                          ? 'border-red-500 ring-2 ring-red-500/30'
+                          : 'border-transparent opacity-80 hover:opacity-100'
+                      }`}
+                      title="مشاهدة جولة الفيديو على يوتيوب"
+                    >
+                      <img
+                        src={getYouTubeThumbnailUrl(property.videoUrl) || property.images[0]}
+                        alt="فيديو العقار"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform opacity-75"
+                      />
+                      <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white">
+                        <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                          <Play className="w-4 h-4 fill-white text-white ml-0.5" />
+                        </div>
+                        <span className="text-[10px] font-bold mt-1 bg-black/60 px-1.5 py-0.5 rounded">
+                          فيديو يوتيوب
+                        </span>
+                      </div>
+                    </button>
+                  )}
+
+                  {/* Photos Thumbnails */}
+                  {property.images.map((img, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setMediaMode('photos');
+                        setActiveImageIndex(idx);
+                      }}
+                      className={`relative shrink-0 lg:shrink aspect-16/10 w-28 lg:w-full rounded-2xl overflow-hidden border-2 transition-all cursor-pointer ${
+                        mediaMode === 'photos' && activeImageIndex === idx
+                          ? 'border-amber-500 ring-2 ring-amber-500/30'
+                          : 'border-transparent opacity-70 hover:opacity-100'
+                      }`}
+                    >
+                      <img
+                        src={img}
+                        alt={`صورة ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                      {idx === 0 && (
+                        <span className="absolute bottom-1 right-1 bg-black/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+                          الواجهة
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* 2-Column Content Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -280,6 +392,47 @@ function PropertyDetailsContent() {
                 ))}
               </div>
             </div>
+
+            {/* Dedicated YouTube Tour Section */}
+            {property.videoUrl && extractYouTubeId(property.videoUrl) && (
+              <div className="bg-white rounded-3xl p-6 shadow-xs border border-slate-200/80 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-lg flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
+                      <span>جولة الفيديو للعقار (YouTube)</span>
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-1">
+                      شاهد جولة فيديو تفصيلية وحصرية داخل وخارج العقار
+                    </p>
+                  </div>
+
+                  <a
+                    href={getYouTubeWatchUrl(property.videoUrl) || property.videoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-sm cursor-pointer self-start sm:self-auto"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>مشاهدة على تطبيق YouTube</span>
+                  </a>
+                </div>
+
+                <div className="aspect-16/9 rounded-2xl overflow-hidden bg-black shadow-md border border-slate-100">
+                  <iframe
+                    src={getYouTubeEmbedUrl(property.videoUrl) || ''}
+                    title={`فيديو ${property.title}`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    className="w-full h-full border-0"
+                  />
+                </div>
+
+                <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 text-xs text-slate-600 flex items-center justify-between">
+                  <span>💡 يمكنك تشغيل الفيديو والتحكم به مباشرة هنا داخل الموقع، أو النقر على أيقونة يوتيوب أسفل اليمين للانتقال للمشاهدة على يوتيوب مباشرة.</span>
+                </div>
+              </div>
+            )}
 
             {/* Location & Map Placeholder */}
             <div className="bg-white rounded-3xl p-6 shadow-xs border border-slate-200/80">
