@@ -2,6 +2,19 @@
 
 import { Property, PropertyRequest, AnalyticsSummary, PropertyStatus, RequestStatus } from '@/types';
 import { INITIAL_PROPERTIES, INITIAL_REQUESTS, AGENCY_CONFIG } from './data';
+import { isSupabaseConfigured } from './supabase';
+import {
+  fetchPropertiesFromSupabase,
+  insertPropertyToSupabase,
+  updatePropertyInSupabase,
+  deletePropertyFromSupabase,
+  incrementPropertyViewsInSupabase,
+  incrementPropertyWhatsAppInSupabase,
+  fetchRequestsFromSupabase,
+  insertRequestToSupabase,
+  updateRequestStatusInSupabase,
+  deleteRequestFromSupabase
+} from './supabaseService';
 
 const STORAGE_KEYS = {
   PROPERTIES: 'ruya_aqar_properties_v3',
@@ -10,9 +23,72 @@ const STORAGE_KEYS = {
   AUTH: 'ruya_aqar_admin_auth_v1',
 };
 
+// Automatic background sync with Supabase
+let isSyncing = false;
+let hasSyncedOnce = false;
+
+export async function syncWithSupabase(): Promise<void> {
+  if (typeof window === 'undefined' || !isSupabaseConfigured || isSyncing) return;
+  isSyncing = true;
+
+  try {
+    const [dbProps, dbReqs] = await Promise.all([
+      fetchPropertiesFromSupabase(),
+      fetchRequestsFromSupabase()
+    ]);
+
+    let changed = false;
+
+    if (dbProps && Array.isArray(dbProps)) {
+      if (dbProps.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.PROPERTIES, JSON.stringify(dbProps));
+        changed = true;
+      } else {
+        // If Supabase is empty, seed it with initial properties
+        const local = getStoredProperties();
+        if (local.length > 0) {
+          for (const p of local) {
+            await insertPropertyToSupabase(p);
+          }
+        }
+      }
+    }
+
+    if (dbReqs && Array.isArray(dbReqs)) {
+      if (dbReqs.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.REQUESTS, JSON.stringify(dbReqs));
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      window.dispatchEvent(new Event('aqar_properties_updated'));
+      window.dispatchEvent(new Event('aqar_requests_updated'));
+    }
+    hasSyncedOnce = true;
+  } catch (e) {
+    console.warn('Sync with Supabase failed, using local storage cache:', e);
+  } finally {
+    isSyncing = false;
+  }
+}
+
+// Trigger initial sync once when running in browser
+if (typeof window !== 'undefined') {
+  setTimeout(() => {
+    syncWithSupabase();
+  }, 100);
+}
+
 // Safe access to LocalStorage
 export function getStoredProperties(): Property[] {
   if (typeof window === 'undefined') return INITIAL_PROPERTIES;
+
+  // Trigger sync in background if configured and not yet synced
+  if (isSupabaseConfigured && !hasSyncedOnce && !isSyncing) {
+    syncWithSupabase();
+  }
+
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.PROPERTIES);
     if (!raw) {
@@ -37,6 +113,11 @@ export function saveProperties(properties: Property[]) {
 
 export function getStoredRequests(): PropertyRequest[] {
   if (typeof window === 'undefined') return INITIAL_REQUESTS;
+
+  if (isSupabaseConfigured && !hasSyncedOnce && !isSyncing) {
+    syncWithSupabase();
+  }
+
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.REQUESTS);
     if (!raw) {
@@ -99,6 +180,9 @@ export function incrementPropertyView(id: string): void {
     list[index].viewsCount = (list[index].viewsCount || 0) + 1;
     saveProperties(list);
   }
+  if (isSupabaseConfigured) {
+    incrementPropertyViewsInSupabase(id);
+  }
 }
 
 export function incrementPropertyWhatsApp(id: string): void {
@@ -107,6 +191,9 @@ export function incrementPropertyWhatsApp(id: string): void {
   if (index !== -1) {
     list[index].whatsappClicks = (list[index].whatsappClicks || 0) + 1;
     saveProperties(list);
+  }
+  if (isSupabaseConfigured) {
+    incrementPropertyWhatsAppInSupabase(id);
   }
 }
 
@@ -120,8 +207,14 @@ export function addProperty(propertyData: Omit<Property, 'id' | 'viewsCount' | '
     whatsappClicks: 0,
     createdAt: new Date().toISOString(),
   };
+
   list.unshift(newProperty);
   saveProperties(list);
+
+  if (isSupabaseConfigured) {
+    insertPropertyToSupabase(newProperty);
+  }
+
   return newProperty;
 }
 
@@ -132,6 +225,11 @@ export function updateProperty(id: string, updates: Partial<Property>): Property
 
   list[index] = { ...list[index], ...updates };
   saveProperties(list);
+
+  if (isSupabaseConfigured) {
+    updatePropertyInSupabase(id, updates);
+  }
+
   return list[index];
 }
 
@@ -144,6 +242,9 @@ export function deleteProperty(id: string): boolean {
   const filtered = list.filter((p) => p.id !== id);
   if (filtered.length !== list.length) {
     saveProperties(filtered);
+    if (isSupabaseConfigured) {
+      deletePropertyFromSupabase(id);
+    }
     return true;
   }
   return false;
@@ -168,8 +269,14 @@ export function addVisitorRequest(requestData: Omit<PropertyRequest, 'id' | 'sta
     whatsappClicks: 0,
     createdAt: new Date().toISOString(),
   };
+
   list.unshift(newRequest);
   saveRequests(list);
+
+  if (isSupabaseConfigured) {
+    insertRequestToSupabase(newRequest);
+  }
+
   return newRequest;
 }
 
@@ -182,8 +289,14 @@ export function addAdminRequest(requestData: Omit<PropertyRequest, 'id' | 'views
     whatsappClicks: 0,
     createdAt: new Date().toISOString(),
   };
+
   list.unshift(newRequest);
   saveRequests(list);
+
+  if (isSupabaseConfigured) {
+    insertRequestToSupabase(newRequest);
+  }
+
   return newRequest;
 }
 
@@ -194,6 +307,11 @@ export function updateRequestStatus(id: string, status: RequestStatus): boolean 
 
   list[index].status = status;
   saveRequests(list);
+
+  if (isSupabaseConfigured) {
+    updateRequestStatusInSupabase(id, status);
+  }
+
   return true;
 }
 
@@ -202,6 +320,9 @@ export function deleteRequest(id: string): boolean {
   const filtered = list.filter((r) => r.id !== id);
   if (filtered.length !== list.length) {
     saveRequests(filtered);
+    if (isSupabaseConfigured) {
+      deleteRequestFromSupabase(id);
+    }
     return true;
   }
   return false;
@@ -218,7 +339,7 @@ export function incrementRequestWhatsApp(id: string): void {
 
 // WhatsApp Helper
 export function getPropertyWhatsAppUrl(property: Property): string {
-  const text = `مرحباً، أود الاستفسار بخصوص العقار كود [${property.code}]: "${property.title}" المعروض بسعر ${property.price.toLocaleString('ar-SA')} ريال. رابط العقار: ${typeof window !== 'undefined' ? window.location.origin : ''}/properties/${property.id}`;
+  const text = `مرحباً، أود الاستفسار بخصوص العقار كود [${property.code}]: "${property.title}" المعروض بسعر ${property.price.toLocaleString('ar-SA')} دولار. رابط العقار: ${typeof window !== 'undefined' ? window.location.origin : ''}/properties/${property.id}`;
   return `https://wa.me/${AGENCY_CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`;
 }
 

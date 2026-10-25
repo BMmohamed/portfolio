@@ -26,7 +26,8 @@ import {
   ArrowUp,
   ArrowDown,
   Video,
-  GripVertical
+  GripVertical,
+  Database
 } from 'lucide-react';
 import { 
   getStoredProperties, 
@@ -40,6 +41,7 @@ import {
   getYouTubeEmbedUrl, 
   getYouTubeWatchUrl 
 } from '@/lib/youtube';
+import { isSupabaseConfigured } from '@/lib/supabase';
 import { Property, PropertyPurpose, PropertyType, PropertyStatus } from '@/types';
 
 // Preset high quality photos for quick admin selection
@@ -281,13 +283,30 @@ function ManagePropertiesContent() {
           </p>
         </div>
 
-        <button
-          onClick={handleOpenAdd}
-          className="inline-flex items-center gap-2 bg-sky-900 hover:bg-sky-950 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition-all cursor-pointer self-start sm:self-auto"
-        >
-          <PlusCircle className="w-4 h-4 text-amber-400" />
-          <span>إضافة عقار جديد</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+          {isSupabaseConfigured ? (
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>متصل بـ Supabase Cloud</span>
+            </span>
+          ) : (
+            <span 
+              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200"
+              title="أضف بيانات Supabase في ملف .env.local للربط السحابي الدائم"
+            >
+              <Database className="w-3.5 h-3.5 text-slate-500" />
+              <span>تخزين محلي (Local Storage)</span>
+            </span>
+          )}
+
+          <button
+            onClick={handleOpenAdd}
+            className="inline-flex items-center gap-2 bg-sky-900 hover:bg-sky-950 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition-all cursor-pointer"
+          >
+            <PlusCircle className="w-4 h-4 text-amber-400" />
+            <span>إضافة عقار جديد</span>
+          </button>
+        </div>
       </div>
 
       {/* Filter / Search Bar */}
