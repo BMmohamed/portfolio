@@ -17,9 +17,9 @@ import {
 } from './supabaseService';
 
 const STORAGE_KEYS = {
-  PROPERTIES: 'ruya_aqar_properties_v3',
-  REQUESTS: 'ruya_aqar_requests_v3',
-  VISITS: 'ruya_aqar_visits_v3',
+  PROPERTIES: 'ruya_aqar_properties_v4',
+  REQUESTS: 'ruya_aqar_requests_v4',
+  VISITS: 'ruya_aqar_visits_v4',
   AUTH: 'ruya_aqar_admin_auth_v1',
 };
 
@@ -95,7 +95,25 @@ export function getStoredProperties(): Property[] {
       localStorage.setItem(STORAGE_KEYS.PROPERTIES, JSON.stringify(INITIAL_PROPERTIES));
       return INITIAL_PROPERTIES;
     }
-    return JSON.parse(raw);
+    const parsed: Property[] = JSON.parse(raw);
+    
+    // Auto-heal: Ensure properties retain videoUrl from initial data if missing in cache
+    let updated = false;
+    parsed.forEach((p) => {
+      if (!p.videoUrl) {
+        const init = INITIAL_PROPERTIES.find((item) => item.id === p.id);
+        if (init?.videoUrl) {
+          p.videoUrl = init.videoUrl;
+          updated = true;
+        }
+      }
+    });
+
+    if (updated) {
+      localStorage.setItem(STORAGE_KEYS.PROPERTIES, JSON.stringify(parsed));
+    }
+
+    return parsed;
   } catch {
     return INITIAL_PROPERTIES;
   }

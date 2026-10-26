@@ -59,19 +59,25 @@ function PropertyDetailsContent() {
 
   useEffect(() => {
     if (!id) return;
-    const p = getPropertyById(id);
-    if (p) {
-      setProperty(p);
-      // Increment view counter as required!
-      incrementPropertyView(p.id);
+    
+    const loadProperty = () => {
+      const p = getPropertyById(id);
+      if (p) {
+        setProperty(p);
+        // Find similar properties
+        const all = getStoredProperties();
+        const similar = all.filter(
+          (item) => item.id !== p.id && (item.type === p.type || item.location.city === p.location.city)
+        ).slice(0, 3);
+        setSimilarProperties(similar);
+      }
+    };
 
-      // Find similar properties
-      const all = getStoredProperties();
-      const similar = all.filter(
-        (item) => item.id !== p.id && (item.type === p.type || item.location.city === p.location.city)
-      ).slice(0, 3);
-      setSimilarProperties(similar);
-    }
+    loadProperty();
+    incrementPropertyView(id);
+
+    window.addEventListener('aqar_properties_updated', loadProperty);
+    return () => window.removeEventListener('aqar_properties_updated', loadProperty);
   }, [id]);
 
   if (!property) {
