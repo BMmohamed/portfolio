@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Building2, Menu, X, PlusCircle, ShieldCheck, PhoneCall } from 'lucide-react';
+import { Building2, Menu, X, PlusCircle, ShieldCheck, PhoneCall, Lock } from 'lucide-react';
 import { AGENCY_CONFIG } from '@/lib/data';
 
 interface NavbarProps {
@@ -368,6 +368,19 @@ export default function Navbar({ onOpenRequestModal }: NavbarProps) {
                   <PhoneCall className="w-3.5 h-3.5 text-emerald-600" />
                   <span dir="ltr">{AGENCY_CONFIG.mobile}</span>
                 </a>
+
+                {/* Subtle temporary admin portal link */}
+                <div className="pt-2 border-t border-slate-200/50 flex items-center justify-center">
+                  <Link
+                    href="/admin/properties"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="inline-flex items-center gap-1.5 text-[10px] text-slate-400/70 hover:text-slate-600 transition-colors py-0.5 px-2 rounded-lg"
+                    title="بوابة الإدارة (مؤقت)"
+                  >
+                    <Lock className="w-2.5 h-2.5 opacity-60" />
+                    <span>بوابة الإدارة</span>
+                  </Link>
+                </div>
               </div>
             </aside>
           </>,
